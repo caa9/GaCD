@@ -10,12 +10,7 @@ The labels for the measured signals variables are contained in the provided *fea
 
 As stated in the source documentation, the measured signals have been normalized and bounded within [-1,1].
 
-When creating data frames, the original variable names have been left unchanged, with two exceptions:
-
-- variable names have been made syntactically valid and unique
-- variable names with a suffix indicating a dimensional axis have been modified in the subset data frame and the final tidy one, with the axis immediately appended to the variable name root --- e.g., "tBodyAcc-mean()-X" has become "tBodyAccX.mean".
-
-See **Data Tidying** below for details.
+The original feature variable names have been left mostly unchanged -- See **Data Tidying** below for details.
 
 ## Data Tidying
 

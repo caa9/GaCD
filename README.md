@@ -2,6 +2,8 @@
 
 The reading and tidying of data is performed by the **run_analysis.R** script.
 
+See the **Code Book** for details about the data and the script.
+
 ### Assumptions
 
 This script assumes it is located in the same directory into which the [data set][1] has been extracted.
