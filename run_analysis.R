@@ -1,104 +1,113 @@
 ## run_analysis
 
-# Merges the training and the test sets to create one data set.
-
-train_data <- read.table("UCI HAR Dataset/train/X_train.txt")
-train_data.activity <- read.table(
-  file        = "UCI HAR Dataset/train/y_train.txt",
-  colClasses  = "integer",
-  col.names   = "Activity.Type"
-)
-train_data.subjects <- read.table(
-  file        = "UCI HAR Dataset/train/subject_train.txt",
-  colClasses  = "integer",
-  col.names   = "Subject"
-)
-train_data <- data.frame(
-  train_data.subjects,
-  Dataset = rep(c("train"), nrow(train_data)),
-  train_data.activity,
-  train_data,
-  stringsAsFactors = FALSE
-)
-
-test_data <- read.table("UCI HAR Dataset/test/X_test.txt")
-test_data.activity <- read.table(
-  file        = "UCI HAR Dataset/test/y_test.txt",
-  colClasses  = "integer",
-  col.names   = "Activity.Type"
-)
-test_data.subjects <- read.table(
-  file        = "UCI HAR Dataset/test/subject_test.txt",
-  colClasses  = "integer",
-  col.names   = "Subject"
-)
-test_data <- data.frame(
-  test_data.subjects,
-  Dataset = rep(c("test"), nrow(test_data)),
-  test_data.activity,
-  test_data,
-  stringsAsFactors = FALSE
-)
-
-activity <- rbind(train_data, test_data)
-
-# Uses descriptive activity names to name the activities in the data set
-activity_labels <- read.table(
-  file        = "UCI HAR Dataset/activity_labels.txt",
-  colClasses  = c("NULL", "character"),
-)[ , 1]
-
-activity$Activity.Type <- factor(
-  activity$Activity.Type,
-  labels = tolower(activity_labels)
-)
-
-# Appropriately labels the data set with descriptive variable names.
+# Get features labels
 feature_labels <- read.table(
   file        = "UCI HAR Dataset/features.txt",
   colClasses  = c("NULL", "character"),
 )[ , 1]
-feature_labels <- sub("BodyBody", "Body", feature_labels) # fix typos
-names(activity)[4:564] <- make.names(feature_labels, unique = TRUE)
+feature_labels <- sub("BodyBody", "Body", feature_labels)   # fix typos
+feature_labels <- make.names(feature_labels, unique = TRUE) # make compliant
 
-# Extracts only the measurements on the mean and standard deviation for each
-# measurement.
-signal_vars.label_root <- scan(
+# Get training data set
+train_signals <- read.table(
+  file      = "UCI HAR Dataset/train/X_train.txt",
+  col.names = feature_labels
+)
+train_signals.activity <- read.table(
+  file        = "UCI HAR Dataset/train/y_train.txt",
+  colClasses  = "integer",
+  col.names   = "Activity"
+)
+train_signals.subjects <- read.table(
+  file        = "UCI HAR Dataset/train/subject_train.txt",
+  colClasses  = "integer",
+  col.names   = "Subject"
+)
+train_signals <- data.frame(
+  train_signals.subjects,
+  Dataset = rep(c("train"), nrow(train_signals)),
+  train_signals.activity,
+  train_signals,
+  stringsAsFactors = FALSE
+)
+
+# Get test data set
+test_signals <- read.table(
+  file      = "UCI HAR Dataset/test/X_test.txt",
+  col.names = feature_labels
+)
+test_signals.activity <- read.table(
+  file        = "UCI HAR Dataset/test/y_test.txt",
+  colClasses  = "integer",
+  col.names   = "Activity"
+)
+test_signals.subjects <- read.table(
+  file        = "UCI HAR Dataset/test/subject_test.txt",
+  colClasses  = "integer",
+  col.names   = "Subject"
+)
+test_signals <- data.frame(
+  test_signals.subjects,
+  Dataset = rep(c("test"), nrow(test_signals)),
+  test_signals.activity,
+  test_signals,
+  stringsAsFactors = FALSE
+)
+
+# Make single combined data set
+signals <- rbind(train_signals, test_signals)
+rm(list = ls(pattern = "(test|train|feature)")) # clean up
+
+# Make 'activity' a well-described factor
+activity_labels <- read.table(
+  file        = "UCI HAR Dataset/activity_labels.txt",
+  colClasses  = c("NULL", "character"),
+)[ , 1]
+signals$Activity <- factor(
+  signals$Activity,
+  labels = tolower(activity_labels)
+)
+rm(list = ls(pattern = "activity_labels")) # clean up
+
+# Extract mean and standard deviation measurements into new data frame
+vars.label_root <- scan(
   file    = "UCI HAR Dataset/features_info.txt",
   what    = "character",
   skip    = 12,
-  nlines  = 17
+  nlines  = 17,
+  quiet   = TRUE
 )
 labels_regex <- sprintf(
   "^(%s)[.](mean|std)[.]",
-  paste(sub("-XYZ", "", signal_vars.label_root), collapse = "|")
+  paste(sub("-XYZ", "", vars.label_root), collapse = "|")
 )
-labels.vars_to_extract <- grep(
+vars_to_extract.labels <- grep(
   labels_regex,
-  names(activity),
+  names(signals),
   perl  = TRUE,
   value = TRUE
 )
-activity_summarized <- dplyr::select(
-  activity,
-  one_of(c("Subject", "Activity.Type", labels.vars_to_extract))
+signals.summary_stats <- dplyr::select(
+  signals,
+  one_of(c("Subject", "Activity", vars_to_extract.labels))
 )
-names(activity_summarized) <-gsub(
+names(signals.summary_stats) <-gsub(
   "([.](?:mean|std))[.]{2}(?:[.]([XYZ]))?$",
   "\\2\\1",
-  names(activity_summarized),
+  names(signals.summary_stats),
   perl = TRUE
-)
+) # slight label formatting for variable names referencing dimension axes
+rm(list = ls(pattern = "(labels|vars)")) # clean up
 
-# From the data set in step 4, creates a second, independent tidy data set
-# with the average of each variable for each activity and each subject.
+# Make independent tidy data set with  average of each variable,
+# for each activity and each subject.
 library(reshape2)
-activity.melt <- melt(
-  activity_summarized,
-  id.vars = c("Subject", "Activity.Type"),
+signals.melt <- melt(
+  signals.summary_stats,
+  id.vars = c("Subject", "Activity"),
 )
-measurements_summary.averages <- dcast(
-  activity.melt,
-  Activity.Type + Subject ~ variable,
+signals.summary_stats.averages <- dcast(
+  signals.melt,
+  Activity + Subject ~ variable,
   mean
 )
