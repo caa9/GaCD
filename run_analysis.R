@@ -81,7 +81,7 @@ labels.vars_to_extract <- grep(
 )
 activity_summarized <- dplyr::select(
   activity,
-  one_of(c("Subject", labels.vars_to_extract))
+  one_of(c("Subject", "Activity.Type", labels.vars_to_extract))
 )
 names(activity_summarized) <-gsub(
   "([.](?:mean|std))[.]{2}(?:[.]([XYZ]))?$",
