@@ -2,6 +2,8 @@
 
 The reading and tidying of data is performed by the **run_analysis.R** script.
 
+At the end of execution, a tidy data set, space delimited and with headers, is written to the current directory.
+
 See the [**Code Book**](CodeBook.md) for details about the data and script.
 
 ### Assumptions
