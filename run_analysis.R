@@ -68,6 +68,12 @@ labels.vars_to_extract <- grep(
   value = TRUE
 )
 activity_summarized <- dplyr::select(activity, one_of(labels.vars_to_extract))
+names(activity_summarized) <-gsub(
+  "([.](?:mean|std))[.]{2}(?:[.]([XYZ]))?$",
+  "\\2\\1",
+  names(activity_summarized),
+  perl = TRUE
+)
 
 # 5. From the data set in step 4, create a second, independent tidy data set
 # with the average of each variable for each activity and each subject.

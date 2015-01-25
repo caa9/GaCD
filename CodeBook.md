@@ -21,3 +21,5 @@ The *train* and *test* datasets are combined into the ***activity*** data frame.
 The **Activity Type** variable was reformatted as a factor, with the labels uploaded from the "activity_labels.txt" file provided in the data files set and converted to lowercase.
 
 The feature labels are read from the provided "features.txt" file and subsequently made syntactically valid and unique.  Also, a "BodyBody" typo is fixed across a subset of labels.
+
+For the extracted set of variables, the variable labels are cleaned up a bit.
