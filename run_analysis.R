@@ -51,7 +51,7 @@ names(activity)[3:563] <- make.names(feature_labels, unique = TRUE)
 
 # Extracts only the measurements on the mean and standard deviation for each
 # measurement.
-signal_vars.label_base <- scan(
+signal_vars.label_root <- scan(
   file    = "UCI HAR Dataset/features_info.txt",
   what    = "character",
   skip    = 12,
@@ -59,7 +59,7 @@ signal_vars.label_base <- scan(
 )
 labels_regex <- sprintf(
   "^(%s)[.](mean|std)[.]",
-  paste(sub("-XYZ", "", signal_vars.label_base), collapse = "|")
+  paste(sub("-XYZ", "", signal_vars.label_root), collapse = "|")
 )
 labels.vars_to_extract <- grep(
   labels_regex,
