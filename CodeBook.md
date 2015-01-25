@@ -24,3 +24,7 @@ The **Activity Type** variable was reformatted as a factor, with the labels uplo
 The feature labels are read from the provided "features.txt" file and subsequently made syntactically valid and unique.  Also, a "BodyBody" typo is fixed across a subset of labels.
 
 For the extracted set of variables, the variable labels are cleaned up a bit.
+
+### Averages of Measurements Summary Variables data set
+
+To provide the tidy data set with the average of each extracted variable for each activity and each subject, the *melt* and *dcast* functions from the **reshape2** library are used.
