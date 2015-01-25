@@ -2,7 +2,7 @@
 
 The reading and tidying of data is performed by the **run_analysis.R** script.
 
-See the **Code Book** for details about the data and the script.
+See the [**Code Book**](CodeBook.md) for details about the data and script.
 
 ### Assumptions
 
