@@ -1,6 +1,6 @@
 ## run_analysis
 
-# 1. Merges the training and the test sets to create one data set.
+# Merges the training and the test sets to create one data set.
 
 train_data <- read.table("UCI HAR Dataset/train/X_train.txt")
 train_data.activity <- read.table(
@@ -30,10 +30,19 @@ test_data <- data.frame(
 
 activity <- rbind(train_data, test_data)
 
+# Uses descriptive activity names to name the activities in the data set
+activity_labels <- read.table(
+  file        = "UCI HAR Dataset/activity_labels.txt",
+  colClasses  = c("NULL", "character"),
+)[ , 1]
+
+activity$Activity.Type <- factor(
+  activity$Activity.Type,
+  labels = tolower(activity_labels)
+)
+
 # 2. Extract only the measurements on the mean and standard deviation for each
 # measurement.
-
-# 3. Use descriptive activity names to name the activities in the data set
 
 # 4. Appropriately label the data set with descriptive variable names. 
 
