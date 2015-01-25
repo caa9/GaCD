@@ -1,7 +1,7 @@
-*.Rproj
 .Rproj.user
 .Rhistory
 .RData
+*.Rproj
 *.html
 *.zip
 UCI HAR Dataset
