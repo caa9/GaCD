@@ -5,6 +5,7 @@
 ## Data
 
 ## Tidying work
+To determine which variables needs to be extracted in order to get the "mean and standard deviation for each measurement", the list of signals measured is slurped from the provided "features_info.txt" file.  This list becomes the basis for a regular expression used to find the relevant variables, which are subsequently extracted to form the new ***activity_summarized*** data frame.
 
 ### Building a single data set
 

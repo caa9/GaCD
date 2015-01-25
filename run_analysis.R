@@ -49,8 +49,25 @@ feature_labels <- read.table(
 feature_labels <- sub("BodyBody", "Body", feature_labels) # fix typos
 names(activity)[3:563] <- make.names(feature_labels, unique = TRUE)
 
-# 2. Extract only the measurements on the mean and standard deviation for each
+# Extracts only the measurements on the mean and standard deviation for each
 # measurement.
+signal_vars.label_base <- scan(
+  file    = "UCI HAR Dataset/features_info.txt",
+  what    = "character",
+  skip    = 12,
+  nlines  = 17
+)
+labels_regex <- sprintf(
+  "^(%s)[.](mean|std)[.]",
+  paste(sub("-XYZ", "", signal_vars.label_base), collapse = "|")
+)
+labels.vars_to_extract <- grep(
+  labels_regex,
+  names(activity),
+  perl  = TRUE,
+  value = TRUE
+)
+activity_summarized <- dplyr::select(activity, one_of(labels.vars_to_extract))
 
 # 5. From the data set in step 4, create a second, independent tidy data set
 # with the average of each variable for each activity and each subject.
