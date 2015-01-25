@@ -41,10 +41,16 @@ activity$Activity.Type <- factor(
   labels = tolower(activity_labels)
 )
 
+# Appropriately labels the data set with descriptive variable names.
+feature_labels <- read.table(
+  file        = "UCI HAR Dataset/features.txt",
+  colClasses  = c("NULL", "character"),
+)[ , 1]
+feature_labels <- sub("BodyBody", "Body", feature_labels) # fix typos
+names(activity)[3:563] <- make.names(feature_labels, unique = TRUE)
+
 # 2. Extract only the measurements on the mean and standard deviation for each
 # measurement.
-
-# 4. Appropriately label the data set with descriptive variable names. 
 
 # 5. From the data set in step 4, create a second, independent tidy data set
 # with the average of each variable for each activity and each subject.
