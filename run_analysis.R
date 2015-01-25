@@ -1,5 +1,9 @@
 ## run_analysis
 
+library(plyr)
+library(dplyr)
+library(reshape2)
+
 # Get features labels
 feature_labels <- read.table(
   file        = "UCI HAR Dataset/features.txt",
@@ -101,7 +105,6 @@ rm(list = ls(pattern = "(labels|vars)")) # clean up
 
 # Make independent tidy data set with  average of each variable,
 # for each activity and each subject.
-library(reshape2)
 signals.melt <- melt(
   signals.summary_stats,
   id.vars = c("Subject", "Activity"),
