@@ -8,7 +8,13 @@ train_data.activity <- read.table(
   colClasses  = "integer",
   col.names   = "Activity.Type"
 )
+train_data.subjects <- read.table(
+  file        = "UCI HAR Dataset/train/subject_train.txt",
+  colClasses  = "integer",
+  col.names   = "Subject"
+)
 train_data <- data.frame(
+  train_data.subjects,
   Dataset = rep(c("train"), nrow(train_data)),
   train_data.activity,
   train_data,
@@ -21,7 +27,13 @@ test_data.activity <- read.table(
   colClasses  = "integer",
   col.names   = "Activity.Type"
 )
+test_data.subjects <- read.table(
+  file        = "UCI HAR Dataset/test/subject_test.txt",
+  colClasses  = "integer",
+  col.names   = "Subject"
+)
 test_data <- data.frame(
+  test_data.subjects,
   Dataset = rep(c("test"), nrow(test_data)),
   test_data.activity,
   test_data,
@@ -47,7 +59,7 @@ feature_labels <- read.table(
   colClasses  = c("NULL", "character"),
 )[ , 1]
 feature_labels <- sub("BodyBody", "Body", feature_labels) # fix typos
-names(activity)[3:563] <- make.names(feature_labels, unique = TRUE)
+names(activity)[4:564] <- make.names(feature_labels, unique = TRUE)
 
 # Extracts only the measurements on the mean and standard deviation for each
 # measurement.
@@ -67,7 +79,10 @@ labels.vars_to_extract <- grep(
   perl  = TRUE,
   value = TRUE
 )
-activity_summarized <- dplyr::select(activity, one_of(labels.vars_to_extract))
+activity_summarized <- dplyr::select(
+  activity,
+  one_of(c("Subject", labels.vars_to_extract))
+)
 names(activity_summarized) <-gsub(
   "([.](?:mean|std))[.]{2}(?:[.]([XYZ]))?$",
   "\\2\\1",

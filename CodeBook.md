@@ -9,8 +9,9 @@ To determine which variables needs to be extracted in order to get the "mean and
 
 ### Building a single data set
 
-The script starts off by reading the *train* and *test* data sets into separate data frames.  Then it adds two additional variables to each of these data sets:
+The script starts off by reading the *train* and *test* data sets into separate data frames.  Then it adds three additional variables to each of these data sets:
 
+1. a **Subject** variable, with values obtained from reading the corresponding *subject-* data file. 
 1. a **dataset** variable indicating whether the observation belongs to the train or test dataset, with values manually populated.
 1. an **activity** variable, with values obtained from reading the corresponding *y-* data file.
 
