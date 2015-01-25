@@ -111,3 +111,10 @@ signals.summary_stats.averages <- dcast(
   Activity + Subject ~ variable,
   mean
 )
+
+# Write final tidy set to file
+write.table(
+  x = signals.summary_stats.averages,
+  file = "tidy_data.txt",
+  row.names = FALSE
+)
